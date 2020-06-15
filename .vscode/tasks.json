@@ -1,0 +1,83 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "create:builds_dir",
+            "command": "if not exist builds ( mkdir builds )",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+
+        {
+            "dependsOn": "create:builds_dir",
+            "type": "process",
+            "label": "build:development",
+            "windows": {
+                "command": "C:\\MinGW\\bin\\g++.exe"
+            },
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-g", 
+                "${workspaceFolder}\\src\\main.cpp",
+                "-o", "${workspaceFolder}\\builds\\dev--${input:projectName}-${input:projectVersion}.exe",
+                "-Wall"
+            ],
+            "options": {
+                "cwd": "C:\\MinGW\\bin\\"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            }
+
+        },
+
+        {
+            "dependsOn": "create:builds_dir",
+            "type": "process",
+            "label": "build:production",
+            "windows": {
+                "command": "C:\\MinGW\\bin\\g++.exe"
+            },
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-O2",
+                "${workspaceFolder}\\src\\main.cpp",
+                "-o", "${workspaceFolder}\\builds\\prod-${input:projectName}-${input:projectVersion}.exe",
+            ],
+            "options": {
+                "cwd": "C:\\MinGW\\bin\\"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "presentation": {
+                "reveal": "silent"
+            }
+        }
+    ],
+    
+    "inputs": [
+        {
+            "id": "projectName",
+            "type": "promptString",
+            "description": "Name your project",
+            "default": "c-exampe"
+        },
+        {
+            "id": "projectVersion",
+            "type": "promptString",
+            "description": "Name your project",
+            "default": "1.0.0"
+        }
+    ]
+  }
