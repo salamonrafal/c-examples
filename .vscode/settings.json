@@ -44,5 +44,8 @@
         "stdexcept": "c",
         "streambuf": "c",
         "typeinfo": "c"
-    }
+    },
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.pythonPath": "tmpvenv\\Scripts\\python.exe"
 }

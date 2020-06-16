@@ -3,8 +3,8 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "create:builds_dir",
-            "command": "if not exist builds ( mkdir builds )",
+            "label": "_pre:builds_dir",
+            "command": ".\\scripts\\create-dirs.py",
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -15,9 +15,20 @@
         },
 
         {
-            "dependsOn": "create:builds_dir",
+            "dependsOn": [
+                "_pre:builds_dir",
+                "_build:env:development",
+                "_post:move_files"
+            ],
+            "dependsOrder": "sequence",
             "type": "process",
             "label": "build:development",
+            "command": ""
+        },
+
+        {
+            "type": "process",
+            "label": "_build:env:development",
             "windows": {
                 "command": "C:\\MinGW\\bin\\g++.exe"
             },
@@ -25,10 +36,10 @@
             "args": [
                 "-g", 
                 "${workspaceFolder}\\src\\main.cpp",
-                "-o", "${workspaceFolder}\\builds\\dev--${input:projectName}-${input:projectVersion}.exe",
+                "-o", "${workspaceFolder}\\builds\\dev-${workspaceFolderBasename}.exe",
                 "-Wall"
             ],
-            "options": {
+            "options": { 
                 "cwd": "C:\\MinGW\\bin\\"
             },
             "problemMatcher": ["$gcc"],
@@ -43,9 +54,20 @@
         },
 
         {
-            "dependsOn": "create:builds_dir",
+            "dependsOn": [
+                "_pre:builds_dir",
+                "_build:env:production",
+                "_post:move_files"
+            ],
+            "dependsOrder": "sequence",
             "type": "process",
             "label": "build:production",
+            "command": ""
+        },
+
+        {
+            "type": "process",
+            "label": "_build:env:production",
             "windows": {
                 "command": "C:\\MinGW\\bin\\g++.exe"
             },
@@ -53,7 +75,7 @@
             "args": [
                 "-O2",
                 "${workspaceFolder}\\src\\main.cpp",
-                "-o", "${workspaceFolder}\\builds\\prod-${input:projectName}-${input:projectVersion}.exe",
+                "-o", "${workspaceFolder}\\builds\\prod-${workspaceFolderBasename}.exe",
             ],
             "options": {
                 "cwd": "C:\\MinGW\\bin\\"
@@ -63,21 +85,20 @@
             "presentation": {
                 "reveal": "silent"
             }
-        }
-    ],
-    
-    "inputs": [
-        {
-            "id": "projectName",
-            "type": "promptString",
-            "description": "Name your project",
-            "default": "c-exampe"
         },
+
         {
-            "id": "projectVersion",
-            "type": "promptString",
-            "description": "Name your project",
-            "default": "1.0.0"
-        }
+            "type": "shell",
+            "label": "_post:move_files",
+            "command": ".\\scripts\\move-files.py",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+
     ]
   }
